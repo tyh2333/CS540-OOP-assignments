@@ -1,0 +1,6 @@
+Compile:
+
+	command 'make'
+
+Run:
+	./main

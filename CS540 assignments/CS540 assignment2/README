@@ -1,0 +1,9 @@
+Code is in Branch Master !!!!!!
+
+compile:
+    g++ test1.cpp -std=c++11
+Run:
+    ./a.out -p > output.txt
+Result saved in output.txt
+
+

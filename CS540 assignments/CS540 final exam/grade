@@ -1,0 +1,49 @@
+75
+
+1. macro (-5)
+ seg fault
+
+==18381==  If you believe this happened as a result of a stack
+==18381==  overflow in your program's main thread (unlikely but
+==18381==  possible), you can try to increase the size of the
+==18381==  main thread stack using the --main-stacksize= flag.
+==18381==  The main thread stack size used in this run was 8388608.
+==18381== 
+==18381== HEAP SUMMARY:
+==18381==     in use at exit: 76 bytes in 2 blocks
+==18381==   total heap usage: 3 allocs, 1 frees, 1,100 bytes allocated
+==18381== 
+==18381== LEAK SUMMARY:
+==18381==    definitely lost: 64 bytes in 1 blocks
+==18381==    indirectly lost: 0 bytes in 0 blocks
+==18381==      possibly lost: 0 bytes in 0 blocks
+==18381==    still reachable: 12 bytes in 1 blocks
+==18381==         suppressed: 0 bytes in 0 blocks
+==18381== Rerun with --leak-check=full to see details of leaked memory
+==18381== 
+==18381== For counts of detected and suppressed errors, rerun with: -v
+==18381== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+[1]    18381 segmentation fault (core dumped)  valgrind ./main
+
+
+2. string
+
+memory errors
+
+==18673==    by 0x1090B3: main (in /home/hqin/ta/ta_2020f/final/final-tyh2333/string/main)
+==18673== 
+==18673== 
+==18673== HEAP SUMMARY:
+==18673==     in use at exit: 161 bytes in 12 blocks
+==18673==   total heap usage: 22 allocs, 10 frees, 73,940 bytes allocated
+==18673== 
+==18673== LEAK SUMMARY:
+==18673==    definitely lost: 161 bytes in 12 blocks
+==18673==    indirectly lost: 0 bytes in 0 blocks
+==18673==      possibly lost: 0 bytes in 0 blocks
+==18673==    still reachable: 0 bytes in 0 blocks
+==18673==         suppressed: 0 bytes in 0 blocks
+==18673== Rerun with --leak-check=full to see details of leaked memory
+==18673== 
+==18673== For counts of detected and suppressed errors, rerun with: -v
+==18673== ERROR SUMMARY: 8 errors from 8 contexts (suppressed: 0 from 0)

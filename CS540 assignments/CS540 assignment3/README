@@ -1,0 +1,19 @@
+CS540 advanced topics C++
+
+    Implement a non-intrusive, thread-safe, exception-safe, reference-counting smart pointer named cs540::SharedPtr.
+    Our model for this will be std::shared_ptr. Check this website to learn more about std::shared_ptr
+    /**
+     * https://en.cppreference.com/w/cpp/memory/shared_ptr
+     */
+
+(1) compile command:
+
+    make
+
+or
+
+	g++ -g -std=c++11 -Wall -Wextra -pthread -pedantic -O -o shared_ptr SharedPtr_test.cpp
+
+(2) exec command:
+
+    ./shared_ptr

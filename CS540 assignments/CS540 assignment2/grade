@@ -1,0 +1,63 @@
+90
+
+1. seg fault
+
+./test
+word frequency:
+a: 1
+count: 3
+have: 1
+in: 1
+increased: 1
+is: 1
+more: 4
+repeat: 2
+should: 1
+some: 1
+string: 2
+the: 4
+their: 1
+they: 5
+this: 1
+will: 1
+with: 1
+words: 2
+word frequency reversed order:
+words: 2
+with: 1
+will: 1
+this: 1
+they: 5
+their: 1
+the: 4
+string: 2
+some: 1
+should: 1
+repeat: 2
+more: 4
+is: 1
+increased: 1
+in: 1
+have: 1
+count: 3
+a: 1
+-8
+125
+30 not in cubes range
+[1]    19059 segmentation fault (core dumped)  ./test
+
+
+2. Your code is too slow.
+
+time ./test-scaling
+
+
+************************************
+    Ascending insert for cs540::Map<int, int>   
+************************************
+
+Inserting 1,000 elements in aescending order took 2.7381 milliseconds
+Inserting 10,000 elements in aescending order took 213.983 milliseconds
+Inserting 100,000 elements in aescending order took 34,842.7 milliseconds
+^C
+./test-scaling  138.65s user 0.01s system 99% cpu 2:18.70 total

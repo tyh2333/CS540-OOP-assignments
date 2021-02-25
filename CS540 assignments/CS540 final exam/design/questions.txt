@@ -1,0 +1,34 @@
+Q1 is only about API, no implementation. So like a reference manual for users (except much shorter than a real container).
+
+Total length of this should be no more than the equivalent of about 1 page.
+
+==================================================================================================
+
+Question 1
+----------
+
+Design the *public* API for a List container. The container should
+allow:
+
+1. Iterating through it.
+2. Inserting at any position, including beginning, end, and before any element.
+3. Removal of an element in O(1) time.
+
+You'll need to think a little bit about how to identify to the
+container which element to remove.  The container should allow
+duplicated elements.  The container imposes no requirements on the
+contained type other than a copy constructor and destructor.
+
+Iterators should not be invalidated after mutation of the list.
+
+Given the API as C code below.
+
+Question 2
+----------
+Identify what tests you need to validate your List container.  Write
+below, just using English is fine, no need for code.
+
+Question 3
+----------
+What atomic operations or locks would you need for your String
+class?  Write English below, no need for code.

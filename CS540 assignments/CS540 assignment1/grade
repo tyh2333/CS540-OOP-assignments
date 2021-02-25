@@ -1,0 +1,47 @@
+90
+
+
+1. Your code can't compile
+
+test.cpp:15:10: fatal error: Deque.hpp: No such file or directory
+ #include "Deque.hpp"
+          ^~~~~~~~~~~
+compilation terminated.
+
+2. Your code has warning:
+
+In file included from test.cpp:15:0:
+test.cpp: In function ‘MyClass& Deque_MyClass_at(Deque_MyClass*, size_t)’:
+Deque.hpp:108:15: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+         if((i >= 0) && (i < d->d_size)){  \
+             ~~^~~~
+test.cpp:106:1: note: in expansion of macro ‘Deque_DEFINE’
+ Deque_DEFINE(MyClass)
+ ^~~~~~~~~~~~
+test.cpp: In function ‘int& Deque_int_at(Deque_int*, size_t)’:
+Deque.hpp:108:15: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+         if((i >= 0) && (i < d->d_size)){  \
+             ~~^~~~
+test.cpp:117:1: note: in expansion of macro ‘Deque_DEFINE’
+ Deque_DEFINE(int)
+ ^~~~~~~~~~~~
+test.cpp: In function ‘MyClass& Deque_MyClass_at(Deque_MyClass*, size_t)’:
+Deque.hpp:111:5: warning: control reaches end of non-void function [-Wreturn-type]
+     } \
+     ^
+test.cpp:106:1: note: in expansion of macro ‘Deque_DEFINE’
+ Deque_DEFINE(MyClass)
+ ^~~~~~~~~~~~
+test.cpp: In function ‘int& Deque_int_at(Deque_int*, size_t)’:
+Deque.hpp:111:5: warning: control reaches end of non-void function [-Wreturn-type]
+     } \
+     ^
+test.cpp:117:1: note: in expansion of macro ‘Deque_DEFINE’
+ Deque_DEFINE(int)
+ ^~~~~~~~~~~~
+
+3. For Deque_##TYPE##_sort():
+You may need to use qsort_r() instead of std::sort().
+
+4. What will happen if it2.data_pointer is before i1.data_pointer? For example, if you insert some elements and the deque is
+3, 4, x, x, 1, 2		// x is empty, deq.front() returns 1 and deq.back() returns 4. How can you sort this deque without invalid memory access?
