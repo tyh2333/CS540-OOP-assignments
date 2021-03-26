@@ -1,3 +1,9 @@
+Description:
+    
+    Implement a thread safe, non-intrusive Template Smart Pointer, acting like std::shared_ptr using reference count. 
+
+
+
 Code is in Branch Master !!!!!!
 
 compile:
