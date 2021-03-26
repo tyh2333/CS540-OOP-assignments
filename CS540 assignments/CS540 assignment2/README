@@ -1,8 +1,10 @@
 Description:
     
-    Implement a thread safe, non-intrusive Template Smart Pointer, acting like std::shared_ptr using reference count. 
+    Implement a Template container Map, acting like std::map；
     
+    （1）Used doubly-linked Skip List to improve performance on random access from O(n) to O(log n);
     
+    （2）Implemented Iterator, ConstIterator, ReverseIterator for Iterations and make them comparable and assignable.
 
 How to run the code:
 
