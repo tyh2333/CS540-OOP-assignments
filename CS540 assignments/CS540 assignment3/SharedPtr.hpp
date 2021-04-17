@@ -71,15 +71,18 @@ namespace cs540{
         /// increase operation:
         void inc(){
             if(control_ptr != nullptr){
-                std::unique_lock<std::mutex> lock(mutex_540);
+                /// use unique_lock to lock and it will unlock after the function return;
+                std::unique_lock<std::mutex> lck(mutex_540);
                 ++control_ptr->reference_count; /// increase use_count
             }
         }
         /// decrease operation:
         void dec(){
             if(control_ptr != nullptr){
-                std::unique_lock<std::mutex> lock(mutex_540);
+                std::unique_lock<std::mutex> lck(mutex_540);
+//                lck.lock();
                 --control_ptr->reference_count;
+//                lck.unlock();
                 ///     if refer_count down to 0, delete the obj and reset ptr and control_ptr;
                 if (control_ptr->reference_count == 0) {
                     delete control_ptr;
