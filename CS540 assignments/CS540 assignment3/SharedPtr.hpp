@@ -26,7 +26,7 @@ namespace cs540{
     class NodeDerived : public Node {
     public:
         U *data;
-//        using Node::reference_count;
+        using Node::reference_count;
         NodeDerived(U *tmp) {
             reference_count = 1;
             data = tmp;
@@ -64,6 +64,7 @@ namespace cs540{
         T* ptr; /// sharedPtr
         Node* control_ptr;
     public:
+        /// only other SharedPtr can have access to the private attributes:
         template <typename U>
         friend class SharedPtr;
 
@@ -73,25 +74,18 @@ namespace cs540{
                 std::unique_lock<std::mutex> lock(mutex_540);
                 ++control_ptr->reference_count; /// increase use_count
             }
-            else {
-                /// do nothing
-            }
         }
         /// decrease operation:
         void dec(){
             if(control_ptr != nullptr){
                 std::unique_lock<std::mutex> lock(mutex_540);
                 --control_ptr->reference_count;
-                ///     if refer_count down to 0,
-                /// we need to delete the obj and reset ptr and control_ptr;
+                ///     if refer_count down to 0, delete the obj and reset ptr and control_ptr;
                 if (control_ptr->reference_count == 0) {
                     delete control_ptr;
                     ptr = nullptr;
                     control_ptr = nullptr;
                 }
-            }
-            else {
-                /// do nothing
             }
         }
         ///+++++++++++++++++++++++++++++++++++++++++++++++++++++++///
@@ -100,34 +94,33 @@ namespace cs540{
 
         /// (1) Constructs a smart pointer that points to null.
         SharedPtr(){
-            ptr = nullptr;
-            control_ptr = nullptr;
+            this->ptr = nullptr;
+            this->control_ptr = nullptr;
         }
 
         /// (2) Constructs a smart pointer that points to the given object.
         /// The reference count is initialized to one.
         template <typename U>
         explicit SharedPtr(U *data){
-            ptr = data;
+            this->ptr = data;
             /// reference count operation will be done in NodeDerived(U*)
-            control_ptr = new NodeDerived<U>(data);
+            this->control_ptr = new NodeDerived<U>(data);
         }
         /// (3) If p is not null, then reference count of the managed object is incremented.
-
         SharedPtr(const SharedPtr &p){
-            ptr = p.ptr;
-            control_ptr = p.control_ptr;
+            this->ptr = p.ptr;
+            this->control_ptr = p.control_ptr;
             if(ptr != nullptr){
                 inc();
             }
         }
-        /// If U * is not implicitly convertible to T *, use of the second constructor
-        /// will result in a compile-time error when the compiler attempts to
+        /// If U * is not implicitly convertible to T *, use of the second: (SharedPtr(const SharedPtr &p))
+        /// constructor will result in a compile-time error when the compiler attempts to
         /// instantiate the member template.
         template <typename U>
         SharedPtr(const SharedPtr<U> &p){
-            ptr = p.ptr;
-            control_ptr = p.control_ptr;
+            this->ptr = p.ptr;
+            this->control_ptr = p.control_ptr;
             if(ptr != nullptr){
                 inc();
             }
@@ -138,8 +131,8 @@ namespace cs540{
         /// After this function, p must be null.
         /// This must work if U * is implicitly convertible to T *.
         SharedPtr(SharedPtr &&p){
-            ptr = p.ptr;
-            control_ptr = p.control_ptr;
+            this->ptr = p.ptr;
+            this->control_ptr = p.control_ptr;
             /// After this function, p must be null.
             p.ptr = nullptr;
             p.control_ptr = nullptr;
@@ -147,8 +140,8 @@ namespace cs540{
 
         template <typename U>
         SharedPtr(SharedPtr<U> &&p){
-            ptr = p.ptr;
-            control_ptr = p.control_ptr;
+            this->ptr = p.ptr;
+            this->control_ptr = p.control_ptr;
             /// After this function, p must be null.
             p.ptr = nullptr;
             p.control_ptr = nullptr;

@@ -5,7 +5,7 @@
  g++ -g -std=c++11 -Wall -Wextra -pthread -pedantic -O -o shared_ptr SharedPtr_test.cpp -w
  */
 
-// NOTE compile with -pthread
+/// NOTE compile with -pthread
 #include "SharedPtr.hpp"
 #include <new>
 #include <pthread.h>
@@ -26,7 +26,7 @@ using namespace cs540;
 class Random {
 public:
     Random(unsigned int s = 0);
-    // Generate random int in range [l,h].
+    /// Generate random int in range [l,h].
     int operator()(int l, int h) {
         return std::uniform_int_distribution<int>(l, h)(gen);
     }
@@ -41,7 +41,7 @@ Random::Random(unsigned int seed) : gen(seed) {}
 
 void basic_tests_1();
 void basic_tests_2();
-// RunSecs needs to be here so that it can be set via command-line arg.
+/// RunSecs needs to be here so that it can be set via command-line arg.
 int RunSecs = 15;
 void threaded_test();
 size_t AllocatedSpace;
@@ -60,9 +60,9 @@ main(int argc, char *argv[]) {
     setlinebuf(stdout);
 
     {
-        // Force initial iostreams allocation so that memory-leak detecting
-        // will work right.  Tabs and pointer are to get locale stuff
-        // allocated.
+        /// Force initial iostreams allocation so that memory-leak detecting
+        /// will work right.  Tabs and pointer are to get locale stuff
+        /// allocated.
         int *p = (int *) 0x1234;
         cout << "\tForce initial allocation on cout: " << p << endl;
         cerr << "\tForce initial allocation on cerr: " << p << endl;
@@ -84,19 +84,19 @@ main(int argc, char *argv[]) {
         }
     }
 
-    // Catch any command-line args without -.
+    /// Catch any command-line args without -.
     if (optind < argc) {
         usage();
     }
 
-    // Initial printf(), to force any internal allocation.
+    /// Initial printf(), to force any internal allocation.
     printf("Tests below:\n");
 
     basic_tests_1();
 
-//    basic_tests_2();
+    basic_tests_2();
 
-//    threaded_test();
+    threaded_test();
 }
 
 void *operator new(size_t sz) {
@@ -114,7 +114,7 @@ void operator delete(void *vp) noexcept {
     char *p = (char *) vp;
     size_t sz = *((size_t *) (p - 8));
     __sync_sub_and_fetch(&AllocatedSpace, sz);
-    // Zero out memory to help catch bugs.
+    /// Zero out memory to help catch bugs.
     memset(p - 8, 0xff, sz + 8);
     free(p - 8);
 }
@@ -127,8 +127,8 @@ protected:
         printf("Base1::Base1()\n");
     }
 private:
-    Base1(const Base1 &); // Disallow.
-    Base1 &operator=(const Base1 &); // Disallow.
+    Base1(const Base1 &); /// Disallow.
+    Base1 &operator=(const Base1 &); /// Disallow.
 protected:
     ~Base1() {
         printf("Base1::~Base1()\n");
@@ -142,8 +142,8 @@ class Derived : public Base1 {
     friend void basic_tests_1();
 private:
     Derived() {}
-    Derived(const Derived &); // Disallow.
-    Derived &operator=(const Derived &); // Disallow.
+    Derived(const Derived &); /// Disallow.
+    Derived &operator=(const Derived &); /// Disallow.
 public:
     ~Derived() {
         printf("Derived::~Derived()\n");
@@ -158,8 +158,8 @@ protected:
         printf("Base_polymorphic::Base_polymorphic()\n");
     }
 private:
-    Base_polymorphic(const Base_polymorphic &); // Disallow.
-    Base_polymorphic &operator=(const Base_polymorphic &); // Disallow.
+    Base_polymorphic(const Base_polymorphic &); /// Disallow.
+    Base_polymorphic &operator=(const Base_polymorphic &); /// Disallow.
 protected:
     virtual ~Base_polymorphic() {
         printf("Base_polymorphic::~Base_polymorphic()\n");
@@ -170,15 +170,15 @@ class Derived_polymorphic : public Base_polymorphic {
     friend void basic_tests_1();
 private:
     Derived_polymorphic() {}
-    Derived_polymorphic(const Derived_polymorphic &); // Disallow.
-    Derived_polymorphic &operator=(const Derived_polymorphic &); // Disallow.
+    Derived_polymorphic(const Derived_polymorphic &); /// Disallow.
+    Derived_polymorphic &operator=(const Derived_polymorphic &); /// Disallow.
 };
 
 class Derived2_polymorphic : public Base_polymorphic {
 private:
     Derived2_polymorphic() {}
-    Derived2_polymorphic(const Derived2_polymorphic &); // Disallow.
-    Derived2_polymorphic &operator=(const Derived2_polymorphic &); // Disallow.
+    Derived2_polymorphic(const Derived2_polymorphic &); /// Disallow.
+    Derived2_polymorphic &operator=(const Derived2_polymorphic &); /// Disallow.
 };
 
 class Base2 {
@@ -187,8 +187,8 @@ protected:
         printf("Base2::Base2()\n");
     }
 private:
-    Base2(const Base2 &); // Disallow.
-    Base2 &operator=(const Base2 &); // Disallow.
+    Base2(const Base2 &); /// Disallow.
+    Base2 &operator=(const Base2 &); /// Disallow.
 protected:
     ~Base2() {
         printf("Base2::~Base2()\n");
@@ -202,8 +202,8 @@ class Derived_mi : public Base1, public Base2 {
     friend void basic_tests_1();
 private:
     Derived_mi() {}
-    Derived_mi(const Derived_mi &); // Disallow.
-    Derived_mi &operator=(const Derived_mi &); // Disallow.
+    Derived_mi(const Derived_mi &); /// Disallow.
+    Derived_mi &operator=(const Derived_mi &); /// Disallow.
 public:
     ~Derived_mi() {
         printf("Derived_mi::~Derived_mi()\n");
@@ -219,8 +219,8 @@ protected:
         printf("Base1_vi::Base1_vi()\n");
     }
 private:
-    Base1_vi(const Base1_vi &); // Disallow.
-    Base1_vi &operator=(const Base1_vi &); // Disallow.
+    Base1_vi(const Base1_vi &); /// Disallow.
+    Base1_vi &operator=(const Base1_vi &); /// Disallow.
 protected:
     ~Base1_vi() {
         printf("Base1_vi::~Base1_vi()\n");
@@ -236,8 +236,8 @@ protected:
         printf("Base2_vi::Base2_vi()\n");
     }
 private:
-    Base2_vi(const Base2_vi &); // Disallow.
-    Base2_vi &operator=(const Base2_vi &); // Disallow.
+    Base2_vi(const Base2_vi &); /// Disallow.
+    Base2_vi &operator=(const Base2_vi &); /// Disallow.
 protected:
     ~Base2_vi() {
         printf("Base2_vi::~Base2_vi()\n");
@@ -249,8 +249,8 @@ class Derived_vi : public virtual Base1_vi, public Base2_vi {
     friend void basic_tests_1();
 private:
     Derived_vi() {}
-    Derived_vi(const Derived_vi &); // Disallow.
-    Derived_vi &operator=(const Derived_vi &); // Disallow.
+    Derived_vi(const Derived_vi &); /// Disallow.
+    Derived_vi &operator=(const Derived_vi &); /// Disallow.
 public:
     ~Derived_vi() {
         printf("Derived_vi::~Derived_vi()\n");
@@ -263,22 +263,22 @@ void basic_tests_1() {
 
     size_t base = AllocatedSpace;
 
-    // Test deleting through original class.
+    /// Test deleting through original class.
     {
-        // Base1 created directly with Derived *.
+        /// Base1 created directly with Derived *.
         {
             SharedPtr<Base1> sp(new Derived);
             {
-                // Test copy constructor.
+                /// Test copy constructor.
                 SharedPtr<Base1> sp2(sp);
             }
         }
-        // Base1 assigned from SharedPtr<Derived>.
+        /// Base1 assigned from SharedPtr<Derived>.
         {
             SharedPtr<Base1> sp2;
             {
                 SharedPtr<Derived> sp(new Derived);
-                // Test template copy constructor.
+                /// Test template copy constructor.
                 SharedPtr<Base1> sp3(sp);
                 sp2 = sp;
                 sp2 = sp2;
@@ -286,7 +286,7 @@ void basic_tests_1() {
         }
     }
 
-    // Test copy constructor and template copy constructor.
+    /// Test copy constructor and template copy constructor.
     {
         {
             SharedPtr<Derived> sp(new Derived);
@@ -298,25 +298,25 @@ void basic_tests_1() {
         }
     }
 
-    // Test assignment operator and template assignment operator.
+    /// Test assignment operator and template assignment operator.
     {
         {
             SharedPtr<Derived> sp(new Derived);
             SharedPtr<Derived> sp2;
             sp2 = sp;
-            sp = sp; // Self assignment.
+            sp = sp; /// Self assignment.
         }
         {
             SharedPtr<Derived> sp(new Derived);
             SharedPtr<Base1> sp2;
             sp2 = sp;
-            sp2 = sp2; // Self assignment.
+            sp2 = sp2; /// Self assignment.
             sp2 = sp;
             sp = sp;
         }
     }
 
-    // Test reset.
+    /// Test reset.
     {
         {
             SharedPtr<Derived> sp(new Derived);
@@ -327,14 +327,14 @@ void basic_tests_1() {
             sp.reset(new Derived);
             SharedPtr<Base1> sp3(sp2);
         }
-        // Need to make sure that it's the reset that
-        // is forcing the object to be deleted, and
-        // not the smart pointer destructor.
-        // Commented out for now, since I think this
-        // test causes more trouble than it's worth.
-        // Need to rewrite it so that I can test instead
-        // by monitoring side-effect from a test class
-        // dtor.
+        /// Need to make sure that it's the reset that
+        /// is forcing the object to be deleted, and
+        /// not the smart pointer destructor.
+        /// Commented out for now, since I think this
+        /// test causes more trouble than it's worth.
+        /// Need to rewrite it so that I can test instead
+        /// by monitoring side-effect from a test class
+        /// dtor.
         /*
         {
             SharedPtr<Derived> sp(new Derived);
@@ -349,7 +349,7 @@ void basic_tests_1() {
         */
     }
 
-    // Test *.
+    /// Test *.
     {
         SharedPtr<Derived> sp(new Derived);
         (*sp).value = 1234;
@@ -357,10 +357,10 @@ void basic_tests_1() {
         SharedPtr<const Derived> sp2(sp);
         int i = (*sp2).value;
         assert(i == 1234);
-        // (*sp2).value = 567; // Should give a syntax error if uncommented.
+        /// (*sp2).value = 567; /// Should give a syntax error if uncommented.
     }
 
-    // Test ->.
+    /// Test ->.
     {
         SharedPtr<Derived> sp(new Derived);
         sp->value = 1234;
@@ -368,10 +368,10 @@ void basic_tests_1() {
         SharedPtr<const Derived> sp2(sp);
         int i = sp2->value;
         assert(i == 1234);
-        // sp2->value = 567; // Should give a syntax error if uncommented.
+        /// sp2->value = 567; /// Should give a syntax error if uncommented.
     }
 
-    // Test get().
+    /// Test get().
     {
         SharedPtr<Derived> sp(new Derived);
         sp.get()->value = 1234;
@@ -381,7 +381,7 @@ void basic_tests_1() {
         assert(i == 1234);
     }
 
-    // Test bool.
+    /// Test bool.
     {
         SharedPtr<Derived> sp(new Derived);
         assert(sp);
@@ -390,11 +390,11 @@ void basic_tests_1() {
 
         SharedPtr<Derived> sp2;
 
-        // int i = sp; // Must give syntax error.
-        // delete sp; // Must give syntax error.
+        /// int i = sp; /// Must give syntax error.
+        /// delete sp; /// Must give syntax error.
     }
 
-    // Test ==.
+    /// Test ==.
     {
         SharedPtr<Derived> sp(new Derived);
         SharedPtr<Derived> sp2(sp);
@@ -406,29 +406,29 @@ void basic_tests_1() {
         assert(!(sp2 == sp3));
     }
 
-    // Test static_pointer_cast.
+    /// Test static_pointer_cast.
     {
         SharedPtr<Derived> sp(new Derived);
         SharedPtr<Base1> sp2(sp);
 
-        // SharedPtr<Derived> sp3(sp2); // Should give a syntax error.
+        /// SharedPtr<Derived> sp3(sp2); /// Should give a syntax error.
         SharedPtr<Derived> sp3(static_pointer_cast<Derived>(sp2));
-        // SharedPtr<Derived> sp4(dynamic_pointer_cast<Derived>(sp2)); // Should give syntax error about polymorphism.
+        /// SharedPtr<Derived> sp4(dynamic_pointer_cast<Derived>(sp2)); /// Should give syntax error about polymorphism.
     }
 
-    // Test dynamic_pointer_cast.
+    /// Test dynamic_pointer_cast.
     {
         SharedPtr<Derived_polymorphic> sp(new Derived_polymorphic);
         SharedPtr<Base_polymorphic> sp2(sp);
 
-        // SharedPtr<Derived_polymorphic> sp3(sp2); // Should give a syntax error.
+        /// SharedPtr<Derived_polymorphic> sp3(sp2); /// Should give a syntax error.
         SharedPtr<Derived_polymorphic> sp3(dynamic_pointer_cast<Derived_polymorphic>(sp2));
         SharedPtr<Derived_polymorphic> sp4(static_pointer_cast<Derived_polymorphic>(sp2));
         SharedPtr<Derived2_polymorphic> sp5(dynamic_pointer_cast<Derived2_polymorphic>(sp2));
         assert(!sp5);
     }
 
-    // Test to make sure works with MI.
+    /// Test to make sure works with MI.
     {
         SharedPtr<Base2> sp2;
         {
@@ -437,32 +437,32 @@ void basic_tests_1() {
                 SharedPtr<Derived_mi> sp(new Derived_mi);
                 sp1 = sp;
                 sp2 = static_pointer_cast<Base2>(static_pointer_cast<Derived_mi>(sp1));
-            } // Destructor for sp called.
-        } // Destructor for sp1 called.
-    } // Destructor for sp2 called.
+            } /// Destructor for sp called.
+        } /// Destructor for sp1 called.
+    } /// Destructor for sp2 called.
 
-    // Test with MI to make sure not doing invalid casts elsewhere.
+    /// Test with MI to make sure not doing invalid casts elsewhere.
     {
         {
             SharedPtr<Base1> sp1;
             {
                 SharedPtr<Derived_mi> sp(new Derived_mi);
                 sp1 = static_pointer_cast<Base1>(static_pointer_cast<Derived_mi>(sp));
-            } // Destructor for sp called.
-        } // Destructor for sp1 called.
+            } /// Destructor for sp called.
+        } /// Destructor for sp1 called.
         {
             SharedPtr<Base2> sp2;
             {
                 SharedPtr<Derived_mi> sp(new Derived_mi);
                 sp2 = static_pointer_cast<Base2>(static_pointer_cast<Derived_mi>(sp));
-            } // Destructor for sp called.
-        } // Destructor for sp2 called.
+            } /// Destructor for sp called.
+        } /// Destructor for sp2 called.
     }
 
-    // Should add test here to make sure not doing cast like from Helper<T> * to
-    // Helper<U> *.
+    /// Should add test here to make sure not doing cast like from Helper<T> * to
+    /// Helper<U> *.
 
-    // Test to make sure works with virtual inheritance.
+    /// Test to make sure works with virtual inheritance.
     {
         SharedPtr<Base2_vi> sp2;
         {
@@ -471,16 +471,16 @@ void basic_tests_1() {
                 SharedPtr<Derived_vi> sp(new Derived_vi);
                 sp1 = sp;
                 sp2 = sp;
-            } // Destructor for sp called.
-        } // Destructor for sp1 called.
-    } // Destructor for sp2 called.
+            } /// Destructor for sp called.
+        } /// Destructor for sp1 called.
+    } /// Destructor for sp2 called.
 
-    // Test const assignment.
+    /// Test const assignment.
     {
         SharedPtr <const Derived> sp_const(new Derived);
         SharedPtr <Derived> sp(new Derived);
         sp_const = sp;
-        // sp = sp_const; // Syntax error if uncommented.
+        /// sp = sp_const; /// Syntax error if uncommented.
     }
 
     if (base != AllocatedSpace) {
@@ -496,7 +496,7 @@ void basic_tests_1() {
 class A {
 public:
     virtual ~A() {
-        //printf("%p deleted\n", (Obj *) this);
+        ///printf("%p deleted\n", (Obj *) this);
     }
 };
 
@@ -510,55 +510,55 @@ public:
     virtual ~C() {}
 };
 
-// These tests overlap a lot with the ones in basic tests 1.
+/// These tests overlap a lot with the ones in basic tests 1.
 void
 basic_tests_2() {
 
     size_t base = AllocatedSpace;
     {
-        // Test default constructor.
+        /// Test default constructor.
         {
             SharedPtr<A> np;
             assert(!np);
         }
 
-        // Test construction from object.
+        /// Test construction from object.
         {
             A *ap = new A;
             SharedPtr<A> a(ap);
             assert(a.get() == ap);
         }
 
-        // Test construction from another SharedPtr of the same type.
+        /// Test construction from another SharedPtr of the same type.
         {
             SharedPtr<A> a(new A);
             SharedPtr<A> a2(a);
         }
 
-        // Test construction from another SharedPtr of a derived type.
+        /// Test construction from another SharedPtr of a derived type.
         {
             SharedPtr<B> b(new B);
             SharedPtr<A> a(b);
         }
 
-        // Test assignment operator.
+        /// Test assignment operator.
         {
-            // Same type.
+            /// Same type.
             SharedPtr<A> a1, a2(new A);
             a1 = a2;
 
-            // Derived to base.
+            /// Derived to base.
             SharedPtr<B> b(new B);
             a1 = b;
 
-            // Object ptr.
+            /// Object ptr.
             a1.reset(new A);
 
-            // To Null.
+            /// To Null.
             a1.reset();
         }
 
-        // More misc tests.
+        /// More misc tests.
         {
             SharedPtr<B> b(new B);
             SharedPtr<C> c(new C);
@@ -571,16 +571,16 @@ basic_tests_2() {
             printf("c: %p\n", &c);
             */
 
-            // Initialization from base should not require cast.
+            /// Initialization from base should not require cast.
             SharedPtr<A> a_base(b);
 
-            // Default initialization and cast to base.
+            /// Default initialization and cast to base.
             SharedPtr<A> a_dc(b);
-            // Note that this will use the templated constructor to do a conversion.
-            // if a templated assignment does not exist.
+            /// Note that this will use the templated constructor to do a conversion.
+            /// if a templated assignment does not exist.
             a_dc = b;
 
-            // Static cast to base.
+            /// Static cast to base.
             SharedPtr<A> a_b = b;
             SharedPtr<A> a_c = c;
             /*
@@ -588,12 +588,12 @@ basic_tests_2() {
             printf("a_c: %p\n", &a_c);
             */
 
-            // Dynamic downcast.
+            /// Dynamic downcast.
             SharedPtr<B> b2 = dynamic_pointer_cast<B>(a_b);
-            // If the below is uncommented, we should get an error in the templated
-            // assignment operator.  This will verify that that is being used rather
-            // than templated constructors, etc.
-            //b2 = a_b;
+            /// If the below is uncommented, we should get an error in the templated
+            /// assignment operator.  This will verify that that is being used rather
+            /// than templated constructors, etc.
+            ///b2 = a_b;
             assert(b2);
             SharedPtr<C> c2 = dynamic_pointer_cast<C>(a_b);
             assert(!c2);
@@ -602,7 +602,7 @@ basic_tests_2() {
             printf("c2: %p\n", &c2);
             */
 
-            // Dynamic downcast.
+            /// Dynamic downcast.
             SharedPtr<B> b3 = dynamic_pointer_cast<B>(a_c);
             assert(!b3);
             SharedPtr<C> c3 = dynamic_pointer_cast<C>(a_c);
@@ -623,7 +623,7 @@ basic_tests_2() {
 
 /* Threaded Test * ============================================================================== */
 
-// These need to be global so the threads can access it.
+/// These need to be global so the threads can access it.
 time_t StartTime;
 const int TABLE_SIZE = 100;
 
@@ -673,42 +673,42 @@ run(void *vp) {
         int act = rand(0, 4);
         switch (act) {
             case 0:
-                // Assign ptr new TestObj;
+                /// Assign ptr new TestObj;
             {
                 int i = rand(0, TABLE_SIZE - 1);
-                // printf("%d: new %d start\n", (int)tid, i);
+                /// printf("%d: new %d start\n", (int)tid, i);
                 ec = pthread_mutex_lock(&Table[i].lock); assert(ec == 0);
                 if (Table[i].ptr != 0) {
-                    Table[i].ptr->reset(new TestObj); // fix
+                    Table[i].ptr->reset(new TestObj); /// fix
                     counters.assignment_new++;
                 }
                 ec = pthread_mutex_unlock(&Table[i].lock); assert(ec == 0);
-                // printf("%d: new %d done\n", (int) tid, i);
+                /// printf("%d: new %d done\n", (int) tid, i);
             }
                 break;
             case 1:
-                // Set ptr to NULL
+                /// Set ptr to NULL
             {
                 int i = rand(0, TABLE_SIZE - 1);
-                // printf("%d: clear %d start\n", (int) tid, i);
+                /// printf("%d: clear %d start\n", (int) tid, i);
                 ec = pthread_mutex_lock(&Table[i].lock); assert(ec == 0);
                 if (Table[i].ptr != 0) {
                     Table[i].ptr->reset();
                     counters.reset++;
                 }
                 ec = pthread_mutex_unlock(&Table[i].lock); assert(ec == 0);
-                // printf("%d: clear %d done\n", (int) tid, i);
+                /// printf("%d: clear %d done\n", (int) tid, i);
             }
                 break;
             case 2:
-                // Assign ptr from another ptr
+                /// Assign ptr from another ptr
             {
                 int i = rand(0, TABLE_SIZE - 1);
                 int j = rand(0, TABLE_SIZE - 1);
 
-                // printf("%d: assign %d=%d start\n", (int) tid, i, j);
+                /// printf("%d: assign %d=%d start\n", (int) tid, i, j);
 
-                // Order to avoid deadlock.
+                /// Order to avoid deadlock.
                 if (i <= j) {
                     ec = pthread_mutex_lock(&Table[i].lock); assert(ec == 0);
                     if (i != j) {
@@ -728,13 +728,13 @@ run(void *vp) {
                 if (i != j) {
                     ec = pthread_mutex_unlock(&Table[j].lock); assert(ec == 0);
                 }
-                // printf("%d: assign %d=%d done\n", (int) tid, i, j);
+                /// printf("%d: assign %d=%d done\n", (int) tid, i, j);
             }
                 break;
             case 3:
-                // Create new sptr.
+                /// Create new sptr.
             {
-                // Create with default.
+                /// Create with default.
                 if (rand(0, 1) == 0) {
                     int i = rand(0, TABLE_SIZE - 1);
                     ec = pthread_mutex_lock(&Table[i].lock); assert(ec == 0);
@@ -743,14 +743,14 @@ run(void *vp) {
                         counters.new_default++;
                     }
                     ec = pthread_mutex_unlock(&Table[i].lock); assert(ec == 0);
-                    // Create with copy constructor.
+                    /// Create with copy constructor.
                 } else {
                     int i = rand(0, TABLE_SIZE - 1), j;
                     do {
                         j = rand(0, TABLE_SIZE - 1);
                     } while (i == j);
 
-                    // Order to avoid deadlock.
+                    /// Order to avoid deadlock.
                     if (i < j) {
                         ec = pthread_mutex_lock(&Table[i].lock); assert(ec == 0);
                         ec = pthread_mutex_lock(&Table[j].lock); assert(ec == 0);
@@ -766,12 +766,12 @@ run(void *vp) {
 
                     ec = pthread_mutex_unlock(&Table[i].lock); assert(ec == 0);
                     ec = pthread_mutex_unlock(&Table[j].lock); assert(ec == 0);
-                    // printf("%d: assign %d=%d done\n", (int) tid, i, j);
+                    /// printf("%d: assign %d=%d done\n", (int) tid, i, j);
                 }
             }
                 break;
             case 4:
-                // Delete
+                /// Delete
             {
                 int i = rand(0, TABLE_SIZE - 1);
                 ec = pthread_mutex_lock(&Table[i].lock); assert(ec == 0);
