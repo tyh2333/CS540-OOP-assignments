@@ -61,7 +61,7 @@ namespace cs540{
     template<typename T>
     class SharedPtr{
     private:
-        T* ptr; /// sharedPtr
+        T* ptr; /// SharedPtr<T> is similar to T*, so here we have a T* ptr and Node* for obj;
         Node* control_ptr;
     public:
         /// only other SharedPtr can have access to the private attributes:
@@ -127,10 +127,10 @@ namespace cs540{
         }
 
         /// (4) Move the managed object from the given smart pointer.
-        /// The reference count must remain unchanged.
-        /// After this function, p must be null.
+        /// The reference count must remain unchanged. After this function, p must be null.
         /// This must work if U * is implicitly convertible to T *.
         SharedPtr(SharedPtr &&p){
+            /// move copy, transfer control from p to *this
             this->ptr = p.ptr;
             this->control_ptr = p.control_ptr;
             /// After this function, p must be null.
@@ -140,6 +140,7 @@ namespace cs540{
 
         template <typename U>
         SharedPtr(SharedPtr<U> &&p){
+            /// move copy, transfer control from p to *this
             this->ptr = p.ptr;
             this->control_ptr = p.control_ptr;
             /// After this function, p must be null.
@@ -158,11 +159,13 @@ namespace cs540{
             /// Must handle self assignment.
             if(*this != p){
                 /// Decrement reference count of current object, if any:
-                dec();
-                ptr = p.ptr;
-                control_ptr = p.control_ptr;
+                /// *this reference count need to -1, so use dec();
+                this->dec();
+                this->ptr = p.ptr;
+                this->control_ptr = p.control_ptr;
                 /// Increment reference count of the given object.
-                inc();
+                /// now *this has the control of p, so just use inc();
+                this->inc();
             }
             return *this;
         }
@@ -172,11 +175,11 @@ namespace cs540{
             /// Must handle self assignment.
             if(*this != p){
                 /// Decrement reference count of current object, if any:
-                dec();
-                ptr = p.ptr;
-                control_ptr = p.control_ptr;
+                this->dec();
+                this->ptr = p.ptr;
+                this->control_ptr = p.control_ptr;
                 /// Increment reference count of the given object.
-                inc();
+                this->inc();
             }
             return *this;
         }
@@ -191,12 +194,14 @@ namespace cs540{
         SharedPtr &operator=(SharedPtr &&p){
             /// Must handle self assignment.
             if(*this != p){
-                /// Decrement reference count of current object, if any:
-                dec();
-                ptr = p.ptr;
-                control_ptr = p.control_ptr;
+                /// Decrement reference count of current object,so dec();
+                this->dec();
+                /// *this get teh control of p, and delete p, bcof move copy
+                this->ptr = p.ptr;
+                this->control_ptr = p.control_ptr;
                 p.ptr = nullptr;
                 p.control_ptr = nullptr;
+                /// no need for inc(); bcof move copy doesn't increase reference count;
             }
             return *this;
         }
@@ -205,12 +210,14 @@ namespace cs540{
         SharedPtr &operator=(SharedPtr<U> &&p){
             /// Must handle self assignment.
             if(*this != p){
-                /// Decrement reference count of current object, if any:
-                dec();
-                ptr = p.ptr;
-                control_ptr = p.control_ptr;
+                /// Decrement reference count of current object,so dec();
+                this->dec();
+                /// *this get teh control of p, and delete p, bcof move copy;
+                this->ptr = p.ptr;
+                this->control_ptr = p.control_ptr;
                 p.ptr = nullptr;
                 p.control_ptr = nullptr;
+                /// no need for inc(); bcof move copy doesn't increase reference count;
             }
             return *this;
         }
@@ -218,6 +225,7 @@ namespace cs540{
         /// (7) Decrement reference count of managed object.
         /// If the reference count is zero, delete the object.
         ~SharedPtr(){
+            /// when destruction, only dec() once, bc other SharedPtr may still has control of current obj;
             dec();
         }
 
